@@ -1,0 +1,195 @@
+﻿<UserControl x:Class="DevAndSports.KinectControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:k="http://schemas.microsoft.com/kinect/2014"
+             xmlns:local="clr-namespace:DevAndSports"
+             xmlns:localkinect="clr-namespace:DevAndSports.Kinect"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="StylesDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:KinectUsageStore x:Key="KinectUsageStore" />
+            <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"
+                                                TrueValue="Visible"
+                                                FalseValue="Collapsed" />
+            <DataTemplate x:Key="ExtraContent"
+                          x:Name="ExtraContent">
+                <Popup IsOpen="{Binding ElementName=Close, Path=IsChecked}"
+                       AllowsTransparency="True"
+                       d:DataContext="{x:Type localkinect:GesturesDetection}">
+                    <Popup.Child>
+                        <!--AAF472D0-->
+                        <Grid Width="300"
+                              Height="150"
+                              Background="#AAFF0090">
+                            <CheckBox x:Name="Close"
+                                      Width="20"
+                                      Height="20"
+                                      IsChecked="True"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Right">
+                                <CheckBox.Template>
+                                    <ControlTemplate>
+                                        <Grid Margin="5">
+                                            <Path Data="M 10.009,1.704 L 8.331,0.026 5.03,3.327 1.703,0 0,1.704 3.326,5.031 0.025,8.332 1.703,10.009 5.004,6.708 8.305,10.009 10.009,8.305 6.708,5.005"
+                                                  Stretch="Uniform"
+                                                  Fill="White" />
+                                        </Grid>
+                                    </ControlTemplate>
+                                </CheckBox.Template>
+                            </CheckBox>
+                            <!--:)-->
+                            <TextBlock Text="&#x263A;"
+                                       Foreground="White"
+                                       FontSize="80"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"
+                                       Margin="0,0,40,0"
+                                       Visibility="{Binding IsHappy, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            <!--:(-->
+                            <TextBlock Text="&#x2639;"
+                                       Foreground="White"
+                                       FontSize="80"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"
+                                       Margin="0,0,40,0"
+                                       Visibility="{Binding IsHappy, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=True}" />
+                            <StackPanel>
+                                <!--<TextBlock Text="{Binding Progress}"
+                                       Foreground="White"
+                                       FontSize="20" />-->
+                                <ComboBox ItemsSource="{Binding Windows}"
+                                          SelectedValue="{Binding SelectedWindow, Mode=TwoWay}"
+                                          Margin="10,10,20,10"
+                                          Style="{StaticResource ComboBoxStyle1}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <TextBlock Foreground="White"
+                                           Margin="10"
+                                           FontSize="20"
+                                           FontFamily="Segoe UI">
+                                <Run Text="Flexions : " />
+                                <Run Text="{Binding HitCount}" />
+                                </TextBlock>
+                                <!--<TextBlock Text="{Binding IsHappy}"
+                                       Foreground="White"
+                                       FontSize="20" />-->
+                            </StackPanel>
+
+                        </Grid>
+                    </Popup.Child>
+                </Popup>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid x:Name="Container">
+        <Grid x:Name="CameraImageContainer"
+              Visibility="Collapsed">
+            <Image x:Name="CameraImage" />
+            <StackPanel Orientation="Vertical"
+                        VerticalAlignment="Center">
+                <!--<Button x:Name="LightButton"
+                        Width="100"
+                        Height="100"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource CommandButtonStyle}"
+                        Click="LightButton_Click">
+                    <Grid>
+                        <Path Data="M24.848307,59.99683C25.564407,59.986874 26.180643,60.516605 26.266891,61.244083 26.340893,62.006058 25.794889,62.698036 25.022884,62.792034L14.458817,63.993999C14.402818,64 14.354817,64 14.301817,64 13.595812,64 12.993809,63.474014 12.909808,62.756035 12.820807,61.994061 13.374811,61.301079 14.141816,61.213081L24.703882,60.006119C24.752382,60.000557,24.800566,59.997494,24.848307,59.99683z M28.284885,54.834461C28.99403,54.827339 29.607101,55.366383 29.684914,56.088238 29.766914,56.855213 29.215912,57.551193 28.445906,57.630192L11.027796,59.568134C10.977796,59.568134 10.924795,59.574131 10.871795,59.574131 10.16779,59.574131 9.5597868,59.042149 9.4827862,58.324169 9.3967857,57.562195 9.9537888,56.870213 10.720794,56.787216L28.141905,54.843277C28.189905,54.837841,28.237608,54.834938,28.284885,54.834461z M28.284885,50.098011C28.99403,50.097446 29.607101,50.635967 29.684914,51.34938 29.766914,52.120358 29.215912,52.818336 28.445906,52.894333L11.027796,54.838276C10.977796,54.843277 10.924795,54.843277 10.871795,54.843277 10.16979,54.843277 9.5597868,54.31229 9.4827862,53.593311 9.3967857,52.824337 9.9537888,52.130356 10.720794,52.051361L28.141905,50.105419C28.189905,50.100483,28.237608,50.098049,28.284885,50.098011z M18.903522,4.9370003C11.562632,4.9370003 5.625,10.874637 5.625,18.212755 5.625,19.062279 6.3165197,19.75 7.1681271,19.75 8.0169945,19.75 8.7110147,19.062279 8.7110147,18.212755 8.7110147,15.394371 9.8412476,12.849395 11.69013,10.999741 13.543003,9.1505651 16.079466,8.0191212 18.903522,8.0191212 19.753811,8.0191212 20.440001,7.323791 20.440001,6.4741554 20.440001,5.6245203 19.74991,4.9370003 18.903522,4.9370003z M19.5858,0C30.396999,0 39.167999,8.7303715 39.167999,19.480316 39.167999,26.593584 32.614601,33.212654 32.614601,33.212654 30.9778,34.855347 29.6341,38.119537 29.6341,40.448326L29.6341,41.051121C29.6341,43.379913,27.730301,45.292,25.396999,45.292L13.7734,45.292C11.4401,45.292,9.5338097,43.379913,9.5338097,41.051121L9.5338097,40.448326C9.5338097,38.119537 8.1900597,34.855347 6.5573702,33.212654 6.5573702,33.212654 3.8724238E-08,26.593584 0,19.480316 3.8724238E-08,8.7303715 8.7669096,0 19.5858,0z"
+                              Stretch="Uniform"
+                              Fill="#FFEC008C" />
+                    </Grid>
+                </Button>
+                <Canvas x:Name="LightSliderContainer"
+                        Visibility="Collapsed">
+                    <Slider x:Name="LightSlider"
+                            Canvas.Top="-50"
+                            Canvas.Left="100"
+                            Width="200"
+                            Minimum="0"
+                            Maximum="10000"
+                            Value="0"
+                            Style="{DynamicResource SliderStyle1}" />
+                </Canvas>-->
+                <Button Width="100"
+                        Height="100"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource CommandButtonStyle}"
+                        Click="TakePhotoButton_Click">
+                    <Grid>
+                        <Path Data="M9.9046135,20.714799C8.1138964,20.714799 6.6656499,22.162595 6.6656504,23.95309 6.6656499,25.740684 8.1138964,27.18868 9.9046135,27.18868L15.673237,27.18868C17.463545,27.18868 18.912149,25.740684 18.912149,23.95309 18.912149,22.162595 17.463545,20.714799 15.673237,20.714799z M40.158001,13.371C46.026024,13.371 50.783001,18.127975 50.783001,23.996 50.783001,29.864025 46.026024,34.620998 40.158001,34.620998 34.289974,34.620998 29.533001,29.864025 29.533001,23.996 29.533001,18.127975 34.289974,13.371 40.158001,13.371z M40.461937,9.5434165C32.504692,9.5434165 26.05513,15.993318 26.05513,23.950269 26.05513,31.910022 32.504692,38.359684 40.461937,38.359684 48.421188,38.359684 54.871048,31.910022 54.871048,23.950269 54.871048,15.993318 48.421188,9.5434165 40.461937,9.5434165z M7.207294,0L18.729979,0 18.729979,4.1410914 58.892818,4.1410914C60.584206,4.14109,61.955997,5.5129138,61.955997,7.2043176L61.955997,40.699016C61.955997,42.390407,60.584206,43.762001,58.892818,43.762001L3.0630906,43.762001C1.3710811,43.762001,-3.5526906E-15,42.390407,6.9030407E-30,40.699016L6.9030407E-30,7.2043176C-3.5526906E-15,5.5129138,1.3710811,4.14109,3.0630906,4.1410914L7.207294,4.1410914z"
+                              Stretch="Uniform"
+                              Fill="#FFEC008C" />
+                    </Grid>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="BodySourceContainer"
+              Visibility="Collapsed">
+            <local:BodyControl x:Name="BodyControl" />
+        </Grid>
+        <Grid x:Name="UsagesContainer"
+              Visibility="Collapsed">
+            <k:KinectRegion x:Name="KinectRegion">
+                <Grid x:Name="KinectRegionGrid">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Disabled"
+                                  k:KinectRegion.IsScrollInertiaEnabled="true">
+                        <ItemsControl ItemsSource="{Binding Source={StaticResource KinectUsageStore}, Path=Usages}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+
+                                    <Grid Width="500"
+                                          Margin="50,10,10,10">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="50" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="50" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0"
+                                                   FontFamily="Segoe UI"
+                                                   FontSize="25"
+                                                   Foreground="#FF5C2D91"
+                                                   Text="{Binding Name}" />
+                                        <Button Grid.Row="1"
+                                                Click="UsageCaseButton_Click">
+                                            <Image Stretch="UniformToFill"
+                                                   Source="{Binding Image1}" />
+                                        </Button>
+                                        <Button Grid.Row="3"
+                                                Click="UsageCaseButton_Click">
+                                            <Image Stretch="UniformToFill"
+                                                   Source="{Binding Image2}" />
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                    <k:KinectUserViewer Height="100"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top" />
+                </Grid>
+            </k:KinectRegion>
+        </Grid>
+    </Grid>
+</UserControl>

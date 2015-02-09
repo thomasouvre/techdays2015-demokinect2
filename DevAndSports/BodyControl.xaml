@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="DevAndSports.BodyControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:DevAndSports"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             d:DataContext="{x:Type local:BodySourceViewModel}"
+             DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid >
+        <Viewbox Stretch="Uniform">
+            <Grid Width="{Binding ViewWidth}"
+                  Height="{Binding ViewHeight}">
+                <ItemsControl ItemsSource="{Binding BodyViewModels}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid d:DataContext="{x:Type local:BodyViewModel}"
+                                  Visibility="{Binding IsTracked, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <ItemsControl ItemsSource="{Binding Joints.Values}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <Canvas />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid d:DataContext="{x:Type local:JointViewModel}"
+                                                  Visibility="{Binding IsTracked, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <Ellipse Width="10"
+                                                         Height="10"
+                                                         Fill="Red"
+                                                         RenderTransformOrigin="0.5,0.5">
+                                                    <Ellipse.RenderTransform>
+                                                        <TranslateTransform X="{Binding X}"
+                                                                            Y="{Binding Y}" />
+                                                    </Ellipse.RenderTransform>
+                                                </Ellipse>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <ItemsControl ItemsSource="{Binding Bones}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <Canvas />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid d:DataContext="{x:Type local:BoneViewModel}"
+                                                  Visibility="{Binding JointParent.IsTracked, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <Line Stroke="Red"
+                                                      StrokeThickness="5"
+                                                      Fill="Red"
+                                                      X1="{Binding JointParent.X}"
+                                                      Y1="{Binding JointParent.Y}"
+                                                      X2="{Binding JointChild.X}"
+                                                      Y2="{Binding JointChild.Y}"
+                                                      RenderTransformOrigin="0.5,0.5">
+                                                    <Line.RenderTransform>
+                                                        <TranslateTransform X="5"
+                                                                            Y="5" />
+                                                    </Line.RenderTransform>
+                                                </Line>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.RenderTransform>
+                        <TranslateTransform X="-5"
+                                            Y="-5"/>
+                    </ItemsControl.RenderTransform>
+                </ItemsControl>
+            </Grid>
+        </Viewbox>
+    </Grid>
+</UserControl>

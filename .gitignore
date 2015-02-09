@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/DevAndSports.sln.ide
+/DevAndSports/bin
+/DevAndSports/obj
+/vgb
+*.user
